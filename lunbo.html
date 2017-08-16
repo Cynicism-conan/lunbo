@@ -14,8 +14,10 @@
             border:2px solid #999;
             overflow: hidden;
             margin:20px;
+            position: relative;
         }
         .pics{
+            position: absolute;
             font-size: 0;
             width: 3000px;
         }
@@ -25,8 +27,8 @@
         }
 
         .icon{
-            position: relative;
-            top: -35px;
+            position: absolute;
+            top: 360px;
             left:250px;
             z-index: 10;
         }
@@ -65,12 +67,12 @@
 </head>
 <body>
   <div id="content">
-      <div class="pics">
+      <div class="pics" style="left: 0;">
           <img src="img/img1.jpg">
           <img src="img/img2.jpg">
           <img src="img/img3.jpg">
           <img src="img/img2.jpg">
-          <img src="img/img1.jpg">
+          <img src="img/img3.jpg">
       </div>
       <div class="icon">
           <span class="on"></span>
@@ -85,8 +87,65 @@
 </body>
 <script>
     window.onload=function(){
+        var timer=null;
+        var timer1=null;
+        var container=document.getElementById("content");
+        var list=document.getElementsByClassName("pics")[0];
         var prev=document.getElementById("left-direc");
         var next=document.getElementById("right-direc");
+        var buttons=document.getElementsByTagName("span");
+
+        prev.addEventListener("click",function(){
+            moving(600,0,"-2400px");
+        });
+        next.addEventListener("click",function(){
+            moving(-600,-2400,"0px");
+
+        });
+        for(var i=0;i<buttons.length;i++){
+            (function(n){
+                buttons[n].onclick=function(){
+                    control_icon(this,n);
+                }
+            })(i)
+        }
+
+        function moving(speed,terminal,flag){    //定义三个变量  保存变化的值，变化的最终位置，？
+            var left_val=parseInt(list.style.left);
+            if(left_val===terminal){
+                list.style.left=flag;
+                left_val=parseInt(list.style.left);
+            }else{
+                left_val+=speed;
+                list.style.left=left_val+"px";
+            }
+            //控制下方的按钮
+            for(var i=0;i<buttons.length;i++){
+                buttons[i].setAttribute("class","");//首先清除原有的背景
+            }
+            buttons[left_val/-600].setAttribute("class","on");//随着左右按钮的点击改变而改变对应的圆圈背景颜色
+        }
+        function control_icon(that,n){
+            for(var i=0;i<buttons.length;i++){
+                buttons[i].setAttribute("class","");
+            }
+            that.setAttribute("class","on");
+            list.style.left=n*(-600)+"px";
+        }
+        timer=setInterval(function(){
+            moving(-600,-2400,"0px");
+        },1700);
+        container.onmouseover=function(){
+            clearInterval(timer);
+        };
+        container.onmouseout=function(){
+            clearInterval(timer);
+            clearInterval(timer1);
+            timer1=setInterval(function(){
+                moving(-600,-2400,"0px");
+            },1700);
+        }
     }
+
 </script>
 </html>
