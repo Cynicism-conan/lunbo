@@ -16,6 +16,10 @@
             margin:20px;
             position: relative;
         }
+        #content:hover a{
+            display: block;
+            z-index: 20;
+        }
         .pics{
             position: absolute;
             font-size: 0;
@@ -52,16 +56,17 @@
             text-align: center;
             text-decoration: none;
             color: #333;
+            display: none;
         }
         #left-direc{
             position: absolute;
-            top:200px;
-            left:40px;
+            top:180px;
+            left:30px;
         }
         #right-direc{
             position: absolute;
-            top:200px;
-            left:550px;
+            top:180px;
+            left:520px;
         }
     </style>
 </head>
@@ -86,66 +91,127 @@
   </div>
 </body>
 <script>
-    window.onload=function(){
-        var timer=null;
-        var timer1=null;
-        var container=document.getElementById("content");
-        var list=document.getElementsByClassName("pics")[0];
-        var prev=document.getElementById("left-direc");
-        var next=document.getElementById("right-direc");
-        var buttons=document.getElementsByTagName("span");
+//    window.onload=function(){
+//        var timer=null;
+//        var timer1=null;
+//        var container=document.getElementById("content");
+//        var list=document.getElementsByClassName("pics")[0];
+//        var prev=document.getElementById("left-direc");
+//        var next=document.getElementById("right-direc");
+//        var buttons=document.getElementsByTagName("span");
+//
+//        prev.addEventListener("click",function(){
+//            moving(600,0,"-2400px");
+//        });
+//        next.addEventListener("click",function(){
+//            moving(-600,-2400,"0px");
+//
+//        });
+//        for(var i=0;i<buttons.length;i++){
+//            (function(n){
+//                buttons[n].onclick=function(){
+//                    control_icon(this,n);
+//                }
+//            })(i)
+//        }
+//
+//        function moving(speed,terminal,flag){    //定义三个变量  保存变化的值，变化的最终位置，判断方向的左右
+//            var left_val=parseInt(list.style.left);
+//            if(left_val===terminal){
+//                list.style.left=flag;
+//                left_val=parseInt(list.style.left);
+//            }else{
+//                left_val+=speed;
+//                list.style.left=left_val+"px";
+//            }
+//            //控制下方的按钮
+//            for(var i=0;i<buttons.length;i++){
+//                buttons[i].setAttribute("class","");//首先清除原有的背景
+//            }
+//            buttons[left_val/-600].setAttribute("class","on");//随着左右按钮的点击改变而改变对应的圆圈背景颜色
+//        }
+//
+//        function control_icon(that,n){
+//            for(var i=0;i<buttons.length;i++){
+//                buttons[i].setAttribute("class","");
+//            }
+//            that.setAttribute("class","on");
+//            list.style.left=n*(-600)+"px";
+//        }
+//        timer=setInterval(function(){
+//            moving(-600,-2400,"0px");
+//        },1700);
+//        container.onmouseover=function(){
+//            clearInterval(timer);
+//            clearInterval(timer1);
+//        };
+//        container.onmouseout=function(){
+//            clearInterval(timer);
+//            clearInterval(timer1);
+//            timer1=setInterval(function(){
+//                moving(-600,-2400,"0px");
+//            },1700);
+//        }
+//    };
+  window.onload=function(){
+      var timer=null;
+      var timer1=null;
+      var container=document.getElementById("content");
+      var list=document.getElementsByClassName("pics")[0];
+      var prev=document.getElementById("left-direc");
+      var next=document.getElementById("right-direc");
+      var buttons=document.getElementsByTagName("span");
 
-        prev.addEventListener("click",function(){
-            moving(600,0,"-2400px");
-        });
-        next.addEventListener("click",function(){
-            moving(-600,-2400,"0px");
+      prev.addEventListener("click", function(){
+         moving(600,0,"-2400px");
+      });
+      next.addEventListener("click", function(){
+         moving(-600,-2400,"0px");
+      });
+      for(var i=0;i<buttons.length;i++){
+          (function(n){                         //闭包，n为行参，i为实参
+              buttons[n].onclick=function(){
+                  circle(this,n);
+              }
+          })(i);
+      }
 
-        });
-        for(var i=0;i<buttons.length;i++){
-            (function(n){
-                buttons[n].onclick=function(){
-                    control_icon(this,n);
-                }
-            })(i)
-        }
+      function moving(speed,terminal,flag){     //传参，speed表示切换图片的大小，一张一张的切换，terminal表示最大范围的值，flag判断左右方向
+          var left_val=parseInt(list.style.left);    //取出来的指要取整
+          if(left_val===terminal){
+              list.style.left=flag;          
+              left_val=parseInt(list.style.left);
+          }else{
+              left_val+=speed;
+              list.style.left=left_val+"px";
+          }
+          for(var i= 0;i<buttons.length;i++){
+              buttons[i].setAttribute("class","");
+          }
+          buttons[left_val/-600].setAttribute("class","on");  //点击左右方向时，同时改变圆圈的样式
+      }
 
-        function moving(speed,terminal,flag){    //定义三个变量  保存变化的值，变化的最终位置，？
-            var left_val=parseInt(list.style.left);
-            if(left_val===terminal){
-                list.style.left=flag;
-                left_val=parseInt(list.style.left);
-            }else{
-                left_val+=speed;
-                list.style.left=left_val+"px";
-            }
-            //控制下方的按钮
-            for(var i=0;i<buttons.length;i++){
-                buttons[i].setAttribute("class","");//首先清除原有的背景
-            }
-            buttons[left_val/-600].setAttribute("class","on");//随着左右按钮的点击改变而改变对应的圆圈背景颜色
-        }
-        function control_icon(that,n){
-            for(var i=0;i<buttons.length;i++){
-                buttons[i].setAttribute("class","");
-            }
-            that.setAttribute("class","on");
-            list.style.left=n*(-600)+"px";
-        }
-        timer=setInterval(function(){
-            moving(-600,-2400,"0px");
-        },1700);
-        container.onmouseover=function(){
-            clearInterval(timer);
-        };
-        container.onmouseout=function(){
-            clearInterval(timer);
-            clearInterval(timer1);
-            timer1=setInterval(function(){
-                moving(-600,-2400,"0px");
-            },1700);
-        }
-    }
-
+      function circle(that,n){
+          for(var i= 0;i<buttons.length;i++){
+              buttons[i].setAttribute("class","");
+          }
+             that.setAttribute("class","on");
+             list.style.left=n*(-600)+"px";   //改变图片
+      }
+      timer=setInterval(function(){            //定时器
+          moving(-600,-2400,"0px");
+      },1700);
+      container.onmouseover=function(){
+          clearInterval(timer);
+          clearInterval(timer1);
+      };
+      container.onmouseout=function(){
+          clearInterval(timer);
+          clearInterval(timer1);
+         timer1=setInterval(function(){
+              moving(-600,-2400,"0px");
+          },1700);
+      }
+  }
 </script>
 </html>
